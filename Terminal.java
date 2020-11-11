@@ -7,6 +7,9 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Terminal {
     
@@ -52,7 +55,6 @@ public class Terminal {
             System.out.println(e.getMessage());
         }
     }
-<<<<<<< Updated upstream
     public String cat(ArrayList<String> args) throws IOException {
 		if(args.size()==0) {
 			System.out.println("There is no arguments");
@@ -72,7 +74,6 @@ public class Terminal {
 		}
 		return content;
 	}
-=======
     public void cd(String sourcePath){
     	
         if(sourcePath.equals("..")){
@@ -89,5 +90,9 @@ public class Terminal {
         		currentDirectory = f.getAbsoluteFile();
         }
     }
->>>>>>> Stashed changes
+    public String date(){
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss aa");
+        Date dateobj = new Date();
+        return df.format(dateobj);
+    }
 }
