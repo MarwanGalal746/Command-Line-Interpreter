@@ -52,6 +52,7 @@ public class Terminal {
             System.out.println(e.getMessage());
         }
     }
+<<<<<<< Updated upstream
     public String cat(ArrayList<String> args) throws IOException {
 		if(args.size()==0) {
 			System.out.println("There is no arguments");
@@ -71,4 +72,22 @@ public class Terminal {
 		}
 		return content;
 	}
+=======
+    public void cd(String sourcePath){
+    	
+        if(sourcePath.equals("..")){
+        	
+            String parent = currentDirectory.getParent();
+            File f = new File(parent);
+            currentDirectory = f.getAbsoluteFile();
+        }
+        else{
+        	File f= getAbsolute(sourcePath);
+        	if(!f.exists()) 
+        		System.out.println("No such file exists");
+        	else
+        		currentDirectory = f.getAbsoluteFile();
+        }
+    }
+>>>>>>> Stashed changes
 }
