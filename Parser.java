@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -37,15 +38,14 @@ public class Parser {
 
         cmd = List[0];      //storing the command in cmd
 
-        //checking if parameters of (< and <<) valid or not
-        //and storing the parameters of the command in args
         args = new ArrayList<>();
-        for (int i = 1; i < List.length; i++) {
-            if (List[i].equals("<") || List[i].equals("<<")) {
-                if (List[i].equals(List[List.length - 1]))
-                    return false;
-            }
+        for (int i = 1; i < List.length; i++)
             args.add(List[i]);
+        if (cmd.equals("rm")) {
+            rmParse();
+            if (args.size() > 0)
+                return true;
+            return false;
         }
         return true;
     }
@@ -56,5 +56,16 @@ public class Parser {
 
     public ArrayList<String> getArguments() {
         return args;
+    }
+
+    private void rmParse() {
+        for (int i = 0; i < args.size(); i++) {
+            File f = new File(args.get(i));
+            if (!f.exists()) {
+                System.out.println("rm: cannot remove '" + args.get(i) + "': No such file or directory");
+                args.remove(args.get(i));
+                i--;
+            }
+        }
     }
 }
