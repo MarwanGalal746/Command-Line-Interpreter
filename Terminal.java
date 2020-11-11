@@ -52,4 +52,23 @@ public class Terminal {
             System.out.println(e.getMessage());
         }
     }
+    public String cat(ArrayList<String> args) throws IOException {
+		if(args.size()==0) {
+			System.out.println("There is no arguments");
+			return "";
+		}
+		String content = "";
+		for (int idx = 0; idx < args.size(); idx++) {
+			File current = getAbsolute(args.get(idx));
+			if (current.exists()) {
+				BufferedReader read = new BufferedReader(new FileReader(current));
+				String line;
+				while ((line = read.readLine()) != null)
+					content += line + '\n';
+				read.close();
+			} else
+				System.out.println("Could not find file: " + current.getAbsolutePath());
+		}
+		return content;
+	}
 }
