@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Terminal {
-
+    public File currentDirectory;
     public void pwd(Parser p) {
         System.out.println(System.getProperty("user.dir"));
     }
@@ -18,19 +18,26 @@ public class Terminal {
         File f = new File(p.getArguments().get(0));
         f.delete();
     }
+    public File getAbsolute(String path){
+        File file = new File(path);
+        if(!file.isAbsolute()){
+            file = new File(currentDirectory.getAbsolutePath(),path);
+        }
+        return file;
+    }
     public void cp(String sourcePath, String destinationPath) {
         File sourceFile;
         File destinationFile;
         InputStream input;
         OutputStream output;
         try {
-            sourceFile = new File(sourcePath);
-            destinationFile = new File(destinationPath);
+            sourceFile = getAbsolute(sourcePath);
+            destinationFile = getAbsolute(destinationPath);
             input = new FileInputStream(sourceFile);
             output = new FileOutputStream(destinationFile);
             byte[] buffer = new byte[1024];
             int numberOfBytes;
-            while((numberOfBytes=input.read(buffer)) > 0){
+            while ((numberOfBytes = input.read(buffer)) > 0) {
                 output.write(buffer, 0, numberOfBytes);
             }
             input.close();
