@@ -98,6 +98,7 @@ public class Terminal {
         Date dateobj = new Date();
         return df.format(dateobj);
     }
+<<<<<<< HEAD
 
     public void ls(ArrayList<String> args) {
         if (args.size() == 0) {
@@ -123,3 +124,12 @@ public class Terminal {
         }
     }
 }
+=======
+    public void clear(){
+       for (int i = 0; i < 150; i++) {
+           System.out.println();
+       }
+       System.out.flush();
+    }
+}
+>>>>>>> 92e13c35f4ba9f8ac569053342f2fd95997811fc
