@@ -9,8 +9,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Terminal {
-    public File currentDirectory;
     
+    public File currentDirectory;   
+
     Terminal(){
         currentDirectory = new File(System.getProperty("user.home"));
     }
