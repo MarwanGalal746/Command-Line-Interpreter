@@ -10,6 +10,11 @@ import java.nio.file.Paths;
 
 public class Terminal {
     public File currentDirectory;
+    
+    Terminal(){
+        currentDirectory = new File(System.getProperty("user.home"));
+    }
+
     public void pwd(Parser p) {
         System.out.println(System.getProperty("user.dir"));
     }
