@@ -65,6 +65,10 @@ public class Parser {
                 System.out.println("rm: cannot remove '" + args.get(i) + "': No such file or directory");
                 args.remove(args.get(i));
                 i--;
+            } else if (f.isDirectory()) {
+                System.out.println("rm: cannot remove '" + args.get(i) + ": Is a directory");
+                args.remove(args.get(i));
+                i--;
             }
         }
     }
