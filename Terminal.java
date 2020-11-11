@@ -19,10 +19,10 @@ public class Terminal {
         f.delete();
     }
     public void cp(String sourcePath, String destinationPath) {
-        File sourceFile = null;
-        File destinationFile = null;
-        InputStream input = null;
-        OutputStream output = null;
+        File sourceFile;
+        File destinationFile;
+        InputStream input;
+        OutputStream output;
         try {
             sourceFile = new File(sourcePath);
             destinationFile = new File(destinationPath);
