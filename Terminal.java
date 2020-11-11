@@ -188,7 +188,7 @@ public class Terminal {
     		res="Invalid command!";
     	return res;
     }
-    public void rmdir(String sourcePath)throws DirectoryNotEmptyException,NoSuchFileException,IOException{
+    public void rmdir(String sourcePath){
         File f = getAbsolute(sourcePath);
         if(!f.exists())
         	System.out.println("No such directory exists");
