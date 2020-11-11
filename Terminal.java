@@ -95,4 +95,10 @@ public class Terminal {
         Date dateobj = new Date();
         return df.format(dateobj);
     }
+    public void clear(){
+       for (int i = 0; i < 150; i++) {
+           System.out.println();
+       }
+       System.out.flush();
+    }
 }
