@@ -1,7 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 public class Parser {
 
@@ -15,7 +14,7 @@ public class Parser {
     //I used it to check if the command of the input is valid or not
     private final String[] commands = {"cd", "ls", "cp", "cat", "more", "|", "<", "<<",
             "mkdir", "rmdir", "mv", "rm", "args", "date", "help", "pwd", "clear"};
-    
+
 
     //fun to check if the input is excutable or not
     //if the input executable, it will change the value of cmd and args
@@ -28,10 +27,11 @@ public class Parser {
         String[] List = input.split(" ");
 
         //recovering spaces in files names
-        for (String s : List)
-            s = s.replace("~", " ");
+        for (int i = 0; i < List.length; i++) {
+            List[i] = List[i].replace("~", " ");
+        }
 
-        //checking if the comman is valid or not
+        //checking if the command is valid or not
         boolean cond = Arrays.asList(commands).contains(List[0]);
         if (!cond) return false;
 
@@ -46,6 +46,12 @@ public class Parser {
             if (args.size() > 0)
                 return true;
             return false;
+        } else if (cmd.equals("ls")) {
+            int x = args.size();
+            lsParse();
+            if (x > 0 && args.size() == 0)
+                return false;
+            return true;
         }
         return true;
     }
@@ -72,4 +78,17 @@ public class Parser {
             }
         }
     }
+
+    private void lsParse() {
+        for (int i = 0; i < getArguments().size(); i++) {
+            File f = new File(getArguments().get(i));
+            if (!f.isDirectory()) {
+                System.out.println("ls: cannot access '" + getArguments().get(i) + "': No such file or directory");
+                args.remove(args.get(i));
+                i--;
+            }
+        }
+    }
+
+
 }
