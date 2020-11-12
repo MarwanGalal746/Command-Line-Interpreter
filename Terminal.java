@@ -467,4 +467,43 @@ public class Terminal {
         else
             System.out.println("There is an error");
     }
+    
+    public void overWrite(ArrayList<String> args) throws IOException {
+        String command = args.get(0);
+        String file = args.get(args.size() - 1);
+        args.remove(args.size() - 1);
+        args.remove(0);
+        String content = "";
+        switch (command) {
+            case "ls":
+                content = ls(args);
+                break;
+            case "pwd":
+                content = pwd();
+                break;
+            case "cat":
+                content = cat(args);
+                break;
+            case "date":
+                content = date(args);
+                break;
+            case "more":
+                content = more(args, true);
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected value: " + command);
+        }
+        File output = getAbsolute(file);
+        if (!output.exists() || !output.isFile()) {
+            System.out.println("Could not find file: " + output);
+            return;
+        }
+        FileWriter fr = new FileWriter(output, false);
+        BufferedWriter br = new BufferedWriter(fr);
+        br.write(content);
+        br.close();
+        fr.close();
+    }
+    
+
 }
