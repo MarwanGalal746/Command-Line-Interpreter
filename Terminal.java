@@ -421,4 +421,23 @@ public class Terminal {
             }
         }
     }
+    public void mv(ArrayList<String>args) throws IOException {
+		if (args.size() > 2) {
+			System.out.println("Too many argument");
+			return;
+		}
+		if (args.size() < 2) {
+			System.out.println("Few argument");
+			return;
+		}
+		cp(args.get(0),args.get(1));
+		args.remove(1);
+		File f=getAbsolute(args.get(0));
+		if(f.isFile())
+			rm(args);
+		else if(f.isDirectory())
+			rmdir(args);
+		else
+			System.out.println("There is an error");
+	}
 }
