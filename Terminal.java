@@ -94,21 +94,6 @@ public class Terminal {
         return content;
     }
 
-    public void cd(String sourcePath) {
-
-        if (sourcePath.equals("..")) {
-
-            String parent = currentDirectory.getParent();
-            File f = new File(parent);
-            currentDirectory = f.getAbsoluteFile();
-        } else {
-            File f = getAbsolute(sourcePath);
-            if (!f.exists())
-                System.out.println("No such file exists");
-            else
-                currentDirectory = f.getAbsoluteFile();
-        }
-    }
 
     public String date() {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss aa");
@@ -158,78 +143,131 @@ public class Terminal {
         System.out.flush();
     }
 
-    public String more(String sourcePath,boolean isPipeOrRedirect) {
-    	String res="";
-    	File f= getAbsolute(sourcePath);
-    	if(!f.exists()) 
-    		System.out.println("No such file exists");
-    	else {
-    		try {
-				FileInputStream a = new FileInputStream(f);
-				BufferedReader br = new BufferedReader(new InputStreamReader(a));
-				String l;
-				int c = 0;
-				int x;
-				Scanner in = new Scanner(System.in);
-				while ((l = br.readLine()) != null) {
-					if(isPipeOrRedirect)
-						res+=l;
-					else
-						System.out.println(l);
-					c++;
-					if (c % 10 == 0&&isPipeOrRedirect==false) {
-						System.out.print("................................. for MORE press 1, otherwise press 2 ");
-						x = in.nextInt();
-						if (x == 2)
-							break;
-					}
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return res;
-    	}
-    	return res;
+    
+  //changes the current directory to the given one
+  public void cd(ArrayList<String> args){
+    if(args.size()>1) {
+        System.out.println("too many arguments!");
+        return;
     }
-
-    public String args(String command) {
-        String res = "";
-        if (command.equalsIgnoreCase("cd"))
-            res = "arg1: Path of the desired directory";
-        else if (command.equalsIgnoreCase("ls"))
-            res = "arg1: Path of the directory to list the files from (zero args mean current directory)";
-        else if (command.equalsIgnoreCase("cp") || command.equalsIgnoreCase("mv"))
-            res = "arg1: SourcePath, arg2: DestinationPath";
-        else if (command.equalsIgnoreCase("cat"))
-            res = "arg1: file's name to print it's content, arg2: file's name to print it's content, ans so on...";
-        else if (command.equalsIgnoreCase("more"))
-            res = "arg1: file's path to print it's content";
-        else if (command.equalsIgnoreCase(">") || command.equalsIgnoreCase(">>"))
-            res = "arg1: file's path to redirect into";
-        else if (command.equalsIgnoreCase("mkdir"))
-            res = "arg1: path to create a directory at";
-        else if (command.equalsIgnoreCase("args") || command.equalsIgnoreCase("help"))
-            res = "arg1: Command's name";
-        else if (command.equalsIgnoreCase("rmdir"))
-            res = "arg1: file's path";
-        else if (command.equalsIgnoreCase("rm"))
-            res = "arg1: file's path, arg2: filse's path, and so on...";
-        else if (command.equalsIgnoreCase("date") || command.equalsIgnoreCase("pwd") || command.equalsIgnoreCase("clear"))
-            res = "This command has no args!";
+    else if(args.size()==0) {
+        currentDirectory = new File(System.getProperty("user.home"));
+        return;
+    }
+    String sourcePath=args.get(0);
+    if(sourcePath.equals("..")){
+        String parent = currentDirectory.getParent();
+        File f = new File(parent);
+        currentDirectory = f.getAbsoluteFile();
+    }
+    else{
+        File f= getAbsolute(sourcePath);
+        if(!f.exists()) 
+            System.out.println("No such file exists");
         else
-            res = "Invalid command!";
+            currentDirectory = f.getAbsoluteFile();
+    }
+}
+
+//changes into default directory
+
+public String more(ArrayList<String> args,boolean isPipeOrRedirect) {
+    String res="";
+    if(args.size()==0) {
+        System.out.println("too few arguments!");
+        return "";
+    }
+    else if(args.size()>1) {
+        System.out.println("too many arguments!");
+        return "";
+    }
+    String sourcePath=args.get(0);
+    File f= getAbsolute(sourcePath);
+    if(!f.exists()) 
+        System.out.println("No such Path exists");
+    else {
+        try {
+            FileInputStream a = new FileInputStream(f);
+            BufferedReader br = new BufferedReader(new InputStreamReader(a));
+            String l;
+            int c = 0;
+            int x;
+            Scanner in = new Scanner(System.in);
+            while ((l = br.readLine()) != null) {
+                if(isPipeOrRedirect)
+                    res+=l+"\n";
+                else
+                    System.out.println(l);
+                c++;
+                if (c % 10 == 0&&isPipeOrRedirect==false) {
+                    System.out.print("................................. for MORE press 1, otherwise press 2 ");
+                    x = in.nextInt();
+                    if (x == 2)
+                        break;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return res;
     }
-
-    public void rmdir(String sourcePath) {
-        File f = getAbsolute(sourcePath);
-        if (!f.exists())
-            System.out.println("No such directory exists");
-        else if (f.isFile())
-            System.out.println("Cannot delete file");
-        else if (!f.delete())
-            System.out.println("Cannot delete non-empty directory.");
+    return res;
+}
+public String args(ArrayList<String> argsList) {
+    String res="";
+    if(argsList.size()==0) {
+        System.out.println("too few arguments!");
+        return "";
     }
+    else if(argsList.size()>1) {
+        System.out.println("too many arguments!");
+        return "";
+    }
+    String command=argsList.get(0);
+    if(command.equalsIgnoreCase("cd"))
+        res="arg1: Path of the desired directory";
+    else if(command.equalsIgnoreCase("ls"))
+        res="arg1: Path of the directory to list the files from (zero args mean current directory)";
+    else if(command.equalsIgnoreCase("cp")||command.equalsIgnoreCase("mv"))
+        res="arg1: SourcePath, arg2: DestinationPath";
+    else if(command.equalsIgnoreCase("cat"))
+        res="arg1: file's name to print it's content, arg2: file's name to print it's content, ans so on...";
+    else if(command.equalsIgnoreCase("more"))
+        res="arg1: file's path to print it's content";
+    else if(command.equalsIgnoreCase(">") || command.equalsIgnoreCase(">>"))
+        res="arg1: file's path to redirect into";
+    else if(command.equalsIgnoreCase("mkdir"))
+        res="arg1: path to create a directory at";
+    else if(command.equalsIgnoreCase("args")||command.equalsIgnoreCase("help"))
+        res="arg1: Command's name";
+    else if(command.equalsIgnoreCase("rmdir"))
+        res="arg1: file's path";
+    else if(command.equalsIgnoreCase("rm"))
+        res="arg1: file's path, arg2: filse's path, and so on...";
+    else if(command.equalsIgnoreCase("date")||command.equalsIgnoreCase("pwd")||command.equalsIgnoreCase("clear"))
+        res="This command has no args!";
+    else
+        res="Invalid command!";
+    return res;
+}
+public void rmdir(ArrayList<String> args){
+    if(args.size()>1) {
+        System.out.println("too many arguments!");
+        return;
+    }
+    else if(args.size()==0) {
+        System.out.println("too few arguments!");
+        return;
+    }
+    String sourcePath=args.get(0);
+    File f = getAbsolute(sourcePath);
+    if(!f.exists())
+        System.out.println("No such directory exists");
+    else if(f.isFile())
+        System.out.println("Cannot delete file");
+    else if(!f.delete())
+        System.out.println("Cannot delete non-empty directory.");
+}
 }
