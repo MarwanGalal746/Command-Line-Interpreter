@@ -12,13 +12,13 @@ public class Parser {
 
     //const array which stores the valid commands
     //I used it to check if the command of the input is valid or not
-    private final String[] commands = {"cd", "ls", "cp", "cat", "more", "|", "<", "<<",
-            "mkdir", "rmdir", "mv", "rm", "args", "date", "help", "pwd", "clear"};
+    private final String[] commands = {"cd", "ls", "cp", "cat", "more", "|", "mkdir",
+            "rmdir", "mv", "rm", "args", "date", "help", "pwd", "clear"};
 
 
     //fun to check if the input is excutable or not
     //if the input executable, it will change the value of cmd and args
-    public boolean parse(String input , String[] output) {
+    public boolean parse(String input, String[] output) {
 
         //replace spaces in files names with ~ to avoid cnflict in splitting
         input = input.replace("\\ ", "~");
