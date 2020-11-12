@@ -158,36 +158,40 @@ public class Terminal {
         System.out.flush();
     }
 
-    public void more(String sourcePath) {
-        File f = getAbsolute(sourcePath);
-        if (!f.exists())
-            System.out.println("No such file exists");
-        else {
-            try {
-                FileInputStream a = new FileInputStream(f);
-                BufferedReader br = new BufferedReader(new InputStreamReader(a));
-                String l;
-                int c = 0;
-                int x;
-                Scanner in = new Scanner(System.in);
-                while ((l = br.readLine()) != null) {
-                    System.out.println(l);
-                    c++;
-                    if (c % 10 == 0) {
-                        System.out
-                                .print("................................. for MORE press 1, otherwise press 2 ");
-                        x = in.nextInt();
-                        if (x == 2)
-                            break;
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return;
-        }
+    public String more(String sourcePath,boolean isPipeOrRedirect) {
+    	String res="";
+    	File f= getAbsolute(sourcePath);
+    	if(!f.exists()) 
+    		System.out.println("No such file exists");
+    	else {
+    		try {
+				FileInputStream a = new FileInputStream(f);
+				BufferedReader br = new BufferedReader(new InputStreamReader(a));
+				String l;
+				int c = 0;
+				int x;
+				Scanner in = new Scanner(System.in);
+				while ((l = br.readLine()) != null) {
+					if(isPipeOrRedirect)
+						res+=l;
+					else
+						System.out.println(l);
+					c++;
+					if (c % 10 == 0&&isPipeOrRedirect==false) {
+						System.out.print("................................. for MORE press 1, otherwise press 2 ");
+						x = in.nextInt();
+						if (x == 2)
+							break;
+					}
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return res;
+    	}
+    	return res;
     }
 
     public String args(String command) {
