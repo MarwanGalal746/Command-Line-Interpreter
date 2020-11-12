@@ -18,7 +18,7 @@ public class Parser {
 
     //fun to check if the input is excutable or not
     //if the input executable, it will change the value of cmd and args
-    public boolean parse(String input) {
+    public boolean parse(String input , String[] output) {
 
         //replace spaces in files names with ~ to avoid cnflict in splitting
         input = input.replace("\\ ", "~");
@@ -42,13 +42,13 @@ public class Parser {
         for (int i = 1; i < List.length; i++)
             args.add(List[i]);
         if (cmd.equals("rm")) {
-            rmParse();
+            rmParse(output);
             if (args.size() > 0)
                 return true;
             return false;
         } else if (cmd.equals("ls")) {
             int x = args.size();
-            lsParse();
+            lsParse(output);
             if (x > 0 && args.size() == 0)
                 return false;
             return true;
@@ -64,26 +64,26 @@ public class Parser {
         return args;
     }
 
-    private void rmParse() {
+    private void rmParse(String[] output) {
         for (int i = 0; i < args.size(); i++) {
             File f = new File(args.get(i));
             if (!f.exists()) {
-                System.out.println("rm: cannot remove '" + args.get(i) + "': No such file or directory");
+                output[0] += "rm: cannot remove '" + args.get(i) + "': No such file or directory" + '\n';
                 args.remove(args.get(i));
                 i--;
             } else if (f.isDirectory()) {
-                System.out.println("rm: cannot remove '" + args.get(i) + ": Is a directory");
+                output[0] += "rm: cannot remove '" + args.get(i) + ": Is a directory\n";
                 args.remove(args.get(i));
                 i--;
             }
         }
     }
 
-    private void lsParse() {
+    private void lsParse(String[] output) {
         for (int i = 0; i < getArguments().size(); i++) {
             File f = new File(getArguments().get(i));
             if (!f.isDirectory()) {
-                System.out.println("ls: cannot access '" + getArguments().get(i) + "': No such file or directory");
+                output[0] += "ls: cannot access '" + getArguments().get(i) + "': No such file or directory\n";
                 args.remove(args.get(i));
                 i--;
             }
@@ -92,3 +92,4 @@ public class Parser {
 
 
 }
+
