@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
+import java.lang.Character.*;
 
 public class Terminal {
 
@@ -63,15 +64,30 @@ public class Terminal {
     }
 
     public void cp(String source, String destination) {
+        File sourceFile;
+        File destinationFile;
+        InputStream input;
+        OutputStream output;
         try {
-            File sourceFile = getAbsolute(source);
-            File destinationFile = getAbsolute(destination);
-            Path sourcePath = sourceFile.toPath();
-            Path destinationPath = destinationFile.toPath();
-            Files.copy(sourcePath, destinationPath.resolve(sourcePath.getFileName()),
-                    StandardCopyOption.REPLACE_EXISTING);
+            sourceFile = getAbsolute(source);
+            if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) { // if my operating system is windows
+                destination += "\\";
+            } else { // otherwise (Linux)
+                destination += '/';
+            }
+            destination += sourceFile.getName();
+            destinationFile = new File(destination);
+            input = new FileInputStream(sourceFile);
+            output = new FileOutputStream(destinationFile);
+            byte[] buffer = new byte[1024];
+            int numberOfBytes;
+            while ((numberOfBytes = input.read(buffer)) > 0) {
+                output.write(buffer, 0, numberOfBytes);
+            }
+            input.close();
+            output.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage() + " is not exist");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -504,6 +520,6 @@ public class Terminal {
         br.close();
         fr.close();
     }
-    
+
 
 }
