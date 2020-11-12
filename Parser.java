@@ -18,7 +18,7 @@ public class Parser {
 
     //fun to check if the input is excutable or not
     //if the input executable, it will change the value of cmd and args
-    public boolean parse(String input) {
+    public boolean parse(String input, String[] output) {
 
         //replace spaces in files names with ~ to avoid cnflict in splitting
         input = input.replace("\\ ", "~");
@@ -36,12 +36,9 @@ public class Parser {
         if (!cond) return false;
 
 
-
-
         cmd = List[0];      //storing the command in cmd
 
         args = new ArrayList<>();
-        args.add(cmd);
         for (int i = 1; i < List.length; i++)
             args.add(List[i]);
         return true;
@@ -56,3 +53,4 @@ public class Parser {
     }
 
 }
+
