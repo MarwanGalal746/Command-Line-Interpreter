@@ -41,18 +41,6 @@ public class Parser {
         args = new ArrayList<>();
         for (int i = 1; i < List.length; i++)
             args.add(List[i]);
-        if (cmd.equals("rm")) {
-            rmParse(output);
-            if (args.size() > 0)
-                return true;
-            return false;
-        } else if (cmd.equals("ls")) {
-            int x = args.size();
-            lsParse(output);
-            if (x > 0 && args.size() == 0)
-                return false;
-            return true;
-        }
         return true;
     }
 
@@ -63,33 +51,6 @@ public class Parser {
     public ArrayList<String> getArguments() {
         return args;
     }
-
-    private void rmParse(String[] output) {
-        for (int i = 0; i < args.size(); i++) {
-            File f = new File(args.get(i));
-            if (!f.exists()) {
-                output[0] += "rm: cannot remove '" + args.get(i) + "': No such file or directory" + '\n';
-                args.remove(args.get(i));
-                i--;
-            } else if (f.isDirectory()) {
-                output[0] += "rm: cannot remove '" + args.get(i) + ": Is a directory\n";
-                args.remove(args.get(i));
-                i--;
-            }
-        }
-    }
-
-    private void lsParse(String[] output) {
-        for (int i = 0; i < getArguments().size(); i++) {
-            File f = new File(getArguments().get(i));
-            if (!f.isDirectory()) {
-                output[0] += "ls: cannot access '" + getArguments().get(i) + "': No such file or directory\n";
-                args.remove(args.get(i));
-                i--;
-            }
-        }
-    }
-
 
 }
 

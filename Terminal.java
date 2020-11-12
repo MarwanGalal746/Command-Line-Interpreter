@@ -17,15 +17,31 @@ public class Terminal {
         currentDirectory = new File(System.getProperty("user.home"));
     }
 
-    public void pwd(String[] output) {
-        output[0] += currentDirectory.getAbsolutePath();
+    public String pwd() {
+        String s = "";
+        s += currentDirectory.getAbsolutePath();
+        return s;
     }
 
-    public void rm(ArrayList<String> args) throws IOException {
+    public String rm(ArrayList<String> args) throws IOException {
+        String s = "";
+        for (int i = 0; i < args.size(); i++) {
+            File f = new File(args.get(i));
+            if (!f.exists()) {
+                System.out.println("rm: cannot remove '" + args.get(i) + "': No such file or directory");
+                args.remove(args.get(i));
+                i--;
+            } else if (f.isDirectory()) {
+                System.out.println("rm: cannot remove '" + args.get(i) + ": Is a directory");
+                args.remove(args.get(i));
+                i--;
+            }
+        }
         for (int i = 0; i < args.size(); i++) {
             File f = new File(args.get(i));
             f.delete();
         }
+        return s;
     }
 
     public File getAbsolute(String path) {
@@ -100,38 +116,51 @@ public class Terminal {
         return df.format(dateobj);
     }
 
-    public void ls(ArrayList<String> args, String[] output) {
-        if (args.size() == 0) {
+    public String ls(ArrayList<String> args) {
+        String res = "";
+        boolean cond = true;
+        for (int i = 0; i < args.size(); i++) {
+            File f = new File(args.get(i));
+            if (!f.isDirectory()) {
+                cond = false;
+                System.out.println("ls: cannot access '" + args.get(i) + "': No such file or directory");
+                args.remove(args.get(i));
+                i--;
+            }
+        }
+        if (args.size() == 0 && cond) {
             File f = currentDirectory;
             String[] files = f.list();
             for (String s : files)
-                output[0] += s + '\n';
-        } else if (args.size() == 1) {
+                res += s + '\n';
+        } else if (args.size() == 1 && cond) {
             File f = getAbsolute(args.get(0));
             String[] files = f.list();
             for (String s : files)
-                output[0] += s + '\n';
+                res += s + '\n';
         } else {
             for (int i = 0; i < args.size(); i++) {
-                output[0] += '\n' + getAbsolute(args.get(i)).getAbsolutePath() + " : \n";
+                res += '\n' + getAbsolute(args.get(i)).getAbsolutePath() + " : \n";
                 File f = getAbsolute(args.get(i));
                 String[] files = f.list();
                 for (String s : files)
-                    output[0] += s + '\n';
-                output[0] += '\n' + '\n';
+                    res += s + '\n';
+                res += '\n' + '\n';
             }
         }
+        return res;
     }
 
-    public void clear(){
+    public void clear() {
         for (int i = 0; i < 150; i++) {
             System.out.println();
         }
         System.out.flush();
     }
+
     public void more(String sourcePath) {
-        File f= getAbsolute(sourcePath);
-        if(!f.exists())
+        File f = getAbsolute(sourcePath);
+        if (!f.exists())
             System.out.println("No such file exists");
         else {
             try {
@@ -160,41 +189,43 @@ public class Terminal {
             return;
         }
     }
+
     public String args(String command) {
-        String res="";
-        if(command.equalsIgnoreCase("cd"))
-            res="arg1: Path of the desired directory";
-        else if(command.equalsIgnoreCase("ls"))
-            res="arg1: Path of the directory to list the files from (zero args mean current directory)";
-        else if(command.equalsIgnoreCase("cp")||command.equalsIgnoreCase("mv"))
-            res="arg1: SourcePath, arg2: DestinationPath";
-        else if(command.equalsIgnoreCase("cat"))
-            res="arg1: file's name to print it's content, arg2: file's name to print it's content, ans so on...";
-        else if(command.equalsIgnoreCase("more"))
-            res="arg1: file's path to print it's content";
-        else if(command.equalsIgnoreCase(">") || command.equalsIgnoreCase(">>"))
-            res="arg1: file's path to redirect into";
-        else if(command.equalsIgnoreCase("mkdir"))
-            res="arg1: path to create a directory at";
-        else if(command.equalsIgnoreCase("args")||command.equalsIgnoreCase("help"))
-            res="arg1: Command's name";
-        else if(command.equalsIgnoreCase("rmdir"))
-            res="arg1: file's path";
-        else if(command.equalsIgnoreCase("rm"))
-            res="arg1: file's path, arg2: filse's path, and so on...";
-        else if(command.equalsIgnoreCase("date")||command.equalsIgnoreCase("pwd")||command.equalsIgnoreCase("clear"))
-            res="This command has no args!";
+        String res = "";
+        if (command.equalsIgnoreCase("cd"))
+            res = "arg1: Path of the desired directory";
+        else if (command.equalsIgnoreCase("ls"))
+            res = "arg1: Path of the directory to list the files from (zero args mean current directory)";
+        else if (command.equalsIgnoreCase("cp") || command.equalsIgnoreCase("mv"))
+            res = "arg1: SourcePath, arg2: DestinationPath";
+        else if (command.equalsIgnoreCase("cat"))
+            res = "arg1: file's name to print it's content, arg2: file's name to print it's content, ans so on...";
+        else if (command.equalsIgnoreCase("more"))
+            res = "arg1: file's path to print it's content";
+        else if (command.equalsIgnoreCase(">") || command.equalsIgnoreCase(">>"))
+            res = "arg1: file's path to redirect into";
+        else if (command.equalsIgnoreCase("mkdir"))
+            res = "arg1: path to create a directory at";
+        else if (command.equalsIgnoreCase("args") || command.equalsIgnoreCase("help"))
+            res = "arg1: Command's name";
+        else if (command.equalsIgnoreCase("rmdir"))
+            res = "arg1: file's path";
+        else if (command.equalsIgnoreCase("rm"))
+            res = "arg1: file's path, arg2: filse's path, and so on...";
+        else if (command.equalsIgnoreCase("date") || command.equalsIgnoreCase("pwd") || command.equalsIgnoreCase("clear"))
+            res = "This command has no args!";
         else
-            res="Invalid command!";
+            res = "Invalid command!";
         return res;
     }
-    public void rmdir(String sourcePath){
+
+    public void rmdir(String sourcePath) {
         File f = getAbsolute(sourcePath);
-        if(!f.exists())
+        if (!f.exists())
             System.out.println("No such directory exists");
-        else if(f.isFile())
+        else if (f.isFile())
             System.out.println("Cannot delete file");
-        else if(!f.delete())
+        else if (!f.delete())
             System.out.println("Cannot delete non-empty directory.");
     }
 }
