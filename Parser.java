@@ -12,7 +12,7 @@ public class Parser {
 
     //const array which stores the valid commands
     //I used it to check if the command of the input is valid or not
-    private final String[] commands = {"cd", "ls", "cp", "cat", "more", "|", "mkdir",
+    private final String[] commands = {"cd", "ls", "cp", "cat", "more", "mkdir",
             "rmdir", "mv", "rm", "args", "date", "help", "pwd", "clear"};
 
 
