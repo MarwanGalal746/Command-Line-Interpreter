@@ -324,4 +324,83 @@ public class Terminal {
 		br.close();
 		fr.close();
 	}
+	public String pipe(ArrayList<String> args) throws IOException {
+        String res = "";
+        String temp = "";
+        String cmd = args.get(0);
+        ArrayList<String> paths = new ArrayList<>();
+        args.remove(0);
+        int r = 0;
+        while (args.size() > 1) {
+            for (int i = 0; i < args.size(); i++) {
+                if (args.get(i).equals("|")) {
+                    args.remove(i);
+                    i--;
+                    if (cmd.equals("pwd"))
+                        temp = pwd();
+                    else if (cmd.equals("cd"))
+                        cd(paths);
+                    else if (cmd.equals("ls")) {
+                        if (r != 0) paths.add(temp);
+                        temp = ls(paths);
+                    } else if (cmd.equals("cat")) {
+                        if (r != 0) paths.add(temp);
+                        temp = cat(paths);
+                    } else if (cmd.equals("args")) {
+                        temp = args(paths);
+                    } else if (cmd.equals("date"))
+                        temp = date(paths);
+                    cmd = args.get(i + 1);
+                    paths.clear();
+                } else if (i + 1 == args.size()) {
+                    if (cmd.equals("pwd"))
+                        res = pwd();
+                    else if (cmd.equals("cd"))
+                        cd(paths);
+                    else if (cmd.equals("ls")) {
+                        paths.add(temp);
+                        res = ls(paths);
+                    } else if (cmd.equals("cat")) {
+                        paths.add(temp);
+                        res = cat(paths);
+                    } else if (cmd.equals("args")) {
+                        temp = args(paths);
+                    } else if (cmd.equals("date"))
+                        res = date(paths);
+                    else if (cmd.equals("more")) {
+                        moreStr(temp);
+                        return "";
+                    }
+                } else if (args.get(i + 1).equals("|")) {
+                    paths.add(args.get(0));
+                    args.remove(i + 1);
+                    args.remove(i);
+                    i--;
+                    if (cmd.equals("pwd"))
+                        temp = pwd();
+                    else if (cmd.equals("cd"))
+                        cd(paths);
+                    else if (cmd.equals("ls")) {
+                        if (r != 0) paths.add(temp);
+                        temp = ls(paths);
+                    } else if (cmd.equals("cat")) {
+                        if (r != 0) paths.add(temp);
+                        temp = cat(paths);
+                    } else if (cmd.equals("args")) {
+                        temp = args(paths);
+                    } else if (cmd.equals("date"))
+                        temp = date(paths);
+                    cmd = args.get(i + 1);
+                    paths.clear();
+                } else {
+                    paths.add(args.get(i));
+                    args.remove(i);
+                    i--;
+                }
+            }
+            r++;
+        }
+        return res;
+    }
+
 }
