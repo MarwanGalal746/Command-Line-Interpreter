@@ -31,14 +31,23 @@ public class Parser {
             List[i] = List[i].replace("~", " ");
         }
 
+
         //checking if the command is valid or not
         boolean cond = Arrays.asList(commands).contains(List[0]);
         if (!cond) return false;
-
-
-        cmd = List[0];      //storing the command in cmd
-
         args = new ArrayList<>();
+        cmd = List[0];      //storing the command in cmd
+        if (Arrays.asList(commands).contains("|")) {
+            for (int i = 0; i < List.length; i++) {
+                if (List[i].equals("|") && i < List.length - 1) {
+                    if (!Arrays.asList(commands).contains(List[i + 1]))
+                        return false;
+                }
+            }
+            args.add(cmd);
+        }
+
+
         for (int i = 1; i < List.length; i++)
             args.add(List[i]);
         return true;
