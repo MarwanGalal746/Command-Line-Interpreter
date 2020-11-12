@@ -2,6 +2,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,23 +52,36 @@ public class Terminal {
 		return file;
 	}
 
-	public void cp(String sourcePath, String destinationPath) {
-		File sourceFile;
-		File destinationFile;
-		InputStream input;
-		OutputStream output;
+	public void checkCpAgruments(ArrayList<String> args) {
+		if (args.size() > 2) {
+			System.out.println("Too many argument");
+		} else if (args.size() < 2) {
+			System.out.println("Few argument");
+		} else {
+			cp(args.get(0), args.get(1));
+		}
+	}
+
+	public void cp(String source, String destination) {
 		try {
-			sourceFile = getAbsolute(sourcePath);
-			destinationFile = getAbsolute(destinationPath);
-			input = new FileInputStream(sourceFile);
-			output = new FileOutputStream(destinationFile);
-			byte[] buffer = new byte[1024];
-			int numberOfBytes;
-			while ((numberOfBytes = input.read(buffer)) > 0) {
-				output.write(buffer, 0, numberOfBytes);
+			File sourceFile = getAbsolute(source);
+			File destinationFile = getAbsolute(destination);
+			Path sourcePath = sourceFile.toPath();
+			Path destinationPath = destinationFile.toPath();
+			Files.copy(sourcePath, destinationPath.resolve(sourcePath.getFileName()),
+					StandardCopyOption.REPLACE_EXISTING);
+		} catch (Exception e) {
+			System.out.println(e.getMessage() + " is not exist");
+		}
+	}
+
+	public void mkdir(String path) {
+		try {
+			if (Files.exists(Paths.get(path))) {
+				System.out.println("Directory alreay exists");
+			} else {
+				Files.createDirectories(Paths.get(path));
 			}
-			input.close();
-			output.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
