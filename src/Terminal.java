@@ -17,10 +17,10 @@ public class Terminal {
     Terminal() {
         currentDirectory = new File(System.getProperty("user.home"));
     }
-
+    
     public String pwd() {
         String s = "";
-        s += currentDirectory.getAbsolutePath();
+        s += currentDirectory.toString();
         return s;
     }
 
@@ -53,7 +53,7 @@ public class Terminal {
         return file;
     }
 
-    public void checkCpAgruments(ArrayList<String> args) {
+    public void cp(ArrayList<String> args) {
         if (args.size() > 2) {
             System.out.println("Too many argument");
         } else if (args.size() < 2) {
@@ -91,7 +91,15 @@ public class Terminal {
         }
     }
 
-    public void mkdir(String path) {
+    public void mkdir(ArrayList<String> args) {
+        if(args.size()>1){
+            System.out.println("Too many argumnet");
+            return;
+        }else if(args.size()<1){
+            System.out.println("Few argument");
+            return;
+        }
+        String path = args.get(0);
         try {
             if (Files.exists(Paths.get(path))) {
                 System.out.println("Directory alreay exists");
@@ -137,7 +145,7 @@ public class Terminal {
         String res = "";
         boolean cond = true;
         for (int i = 0; i < args.size(); i++) {
-            File f = new File(args.get(i));
+            File f = getAbsolute(args.get(i));
             if (!f.isDirectory()) {
                 cond = false;
                 System.out.println("ls: cannot access '" + args.get(i) + "': No such file or directory");
@@ -169,10 +177,7 @@ public class Terminal {
     }
 
     public void clear() {
-        for (int i = 0; i < 150; i++) {
-            System.out.println();
-        }
-        System.out.flush();
+        System.out.print("\033[H\033[2J");
     }
 
     // changes the current directory to the given one
@@ -181,20 +186,20 @@ public class Terminal {
             System.out.println("too many arguments!");
             return;
         } else if (args.size() == 0) {
-            currentDirectory = new File(System.getProperty("user.home"));
+            System.out.println("Few arguments");
             return;
         }
         String sourcePath = args.get(0);
         if (sourcePath.equals("..")) {
             String parent = currentDirectory.getParent();
-            File f = new File(parent);
-            currentDirectory = f.getAbsoluteFile();
+            File f = getAbsolute(parent);
+            currentDirectory = f;
         } else {
             File f = getAbsolute(sourcePath);
             if (!f.exists())
                 System.out.println("No such file exists");
             else
-                currentDirectory = f.getAbsoluteFile();
+                currentDirectory = f;
         }
     }
 
@@ -300,9 +305,9 @@ public class Terminal {
             System.out.println("Cannot delete non-empty directory.");
     }
 
-    public void redirectAppend(ArrayList<String> args) throws IOException {
+    public void redirectAppend(ArrayList<String> args) throws Exception {
         String command = args.get(0);
-        String file = args.get(args.size() - 1);
+        String path = args.get(args.size() - 1);
         args.remove(args.size() - 1);
         args.remove(0);
         String content = "";
@@ -325,16 +330,15 @@ public class Terminal {
             default:
                 throw new IllegalArgumentException("Unexpected value: " + command);
         }
-        File output = getAbsolute(file);
-        if (!output.exists() || !output.isFile()) {
-            System.out.println("Could not find file: " + output);
+        File file = getAbsolute(path);
+        if (!file.exists() || !file.isFile()) {
+            System.out.println("Could not find file: " + file);
             return;
         }
-        FileWriter fr = new FileWriter(output, true);
-        BufferedWriter br = new BufferedWriter(fr);
-        br.write(content);
-        br.close();
-        fr.close();
+        FileWriter writer = new FileWriter(file, true);
+        writer.append(content);
+        writer.append('\n');
+        writer.close();
     }
 
     public String pipe(ArrayList<String> args) throws IOException {
@@ -366,7 +370,7 @@ public class Terminal {
                     } else if (cmd.equals("date"))
                         temp = date(paths);
                     else if (cmd.equals("cp"))
-                        checkCpAgruments(paths);
+                        cp(paths);
                     else if (cmd.equals("rm"))
                         rm(paths);
                     else if (cmd.equals("rmdir"))
@@ -395,7 +399,7 @@ public class Terminal {
                     } else if (cmd.equals("date"))
                         temp = date(paths);
                     else if (cmd.equals("cp"))
-                        checkCpAgruments(paths);
+                        cp(paths);
                     else if (cmd.equals("rm"))
                         rm(paths);
                     else if (cmd.equals("rmdir"))
@@ -430,7 +434,7 @@ public class Terminal {
                     } else if (cmd.equals("date"))
                         temp = date(paths);
                     else if (cmd.equals("cp"))
-                        checkCpAgruments(paths);
+                        cp(paths);
                     else if (cmd.equals("rm"))
                         rm(paths);
                     else if (cmd.equals("rmdir"))
@@ -492,7 +496,7 @@ public class Terminal {
 
     public void overWrite(ArrayList<String> args) throws IOException {
         String command = args.get(0);
-        String file = args.get(args.size() - 1);
+        String path = args.get(args.size() - 1);
         args.remove(args.size() - 1);
         args.remove(0);
         String content = "";
@@ -515,16 +519,14 @@ public class Terminal {
             default:
                 throw new IllegalArgumentException("Unexpected value: " + command);
         }
-        File output = getAbsolute(file);
-        if (!output.exists() || !output.isFile()) {
-            System.out.println("Could not find file: " + output);
+        File file = getAbsolute(path);
+        if (!file.exists() || !file.isFile()) {
+            System.out.println("Could not find file: " + file);
             return;
         }
-        FileWriter fr = new FileWriter(output, false);
-        BufferedWriter br = new BufferedWriter(fr);
-        br.write(content);
-        br.close();
-        fr.close();
+        FileWriter writer = new FileWriter(file, false);
+        writer.write(content);
+        writer.close();
     }
 
     public String help() {
