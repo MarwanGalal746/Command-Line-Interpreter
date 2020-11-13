@@ -520,6 +520,23 @@ public class Terminal {
         br.close();
         fr.close();
     }
+    public String help(){
+        String helpText = new String(), line;
+        
+        try {
+            File file = new File("commandsDescription.txt");
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            while ((line = bufferedReader.readLine()) != null) {
+                helpText += line;
+                helpText += '\n';
+            }
+            bufferedReader.close();
+        } catch (Exception e) {
+            
+            helpText = e.getMessage();
+        }
 
+        return helpText;
+    }
 
 }
