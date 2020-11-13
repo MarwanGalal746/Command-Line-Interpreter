@@ -1,5 +1,3 @@
-For more information on a specific command, type HELP command-name
-
 CD             Displays the name of or changes the current directory.
 CLEAR          Clears the screen.
 COPY           Copies one or more files to another location.
