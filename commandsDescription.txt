@@ -1,0 +1,21 @@
+For more information on a specific command, type HELP command-name
+
+CD             Displays the name of or changes the current directory.
+CLEAR          Clears the screen.
+COPY           Copies one or more files to another location.
+HELP           Provides Help information for Windows commands.
+MKDIR          Creates a directory.
+MORE           Displays output one screen at a time.
+MOVE           Moves one or more files from one directory to another directory.
+PRINT          Prints a text file.
+LS	       List all files in a directory.
+RMDIR	       Remove a directory.
+RM	       Delete file in a directory.
+CAT	       List the contents of a file on the standard output.
+MV	       Move files.
+ARGS 	       List all command arguments.
+DATE           Current date/time.
+EXIT           Stop all.
+PWD	       Find out the path of the current working directory (folder) you’re in.
+PIPE OPERATOR   
+Redirect Operator Write standard output to a file.
