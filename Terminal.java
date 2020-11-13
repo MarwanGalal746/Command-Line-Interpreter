@@ -344,7 +344,7 @@ public class Terminal {
         ArrayList<String> paths = new ArrayList<>();
         args.remove(0);
         int r = 0;
-        while (args.size() > 1) {
+        while (args.size() > 0) {
             for (int i = 0; i < args.size(); i++) {
                 if (args.get(i).equals("|")) {
                     args.remove(i);
@@ -373,6 +373,8 @@ public class Terminal {
                         rmdir(paths);
                     else if (cmd.equals("mv"))
                         mv(paths);
+                    else if (cmd.equals("help"))
+                        temp=help();
                     cmd = args.get(i + 1);
                     paths.clear();
                 } else if (i + 1 == args.size()) {
@@ -404,6 +406,8 @@ public class Terminal {
                         moreStr(temp);
                         return "";
                     }
+                    else if (cmd.equals("help"))
+                        temp=help();
                 } else if (args.get(i + 1).equals("|")) {
                     paths.add(args.get(0));
                     args.remove(i + 1);
@@ -433,6 +437,8 @@ public class Terminal {
                         rmdir(paths);
                     else if (cmd.equals("mv"))
                         mv(paths);
+                    else if (cmd.equals("help"))
+                        temp=help();
                     cmd = args.get(i + 1);
                     paths.clear();
                 } else {
@@ -483,7 +489,7 @@ public class Terminal {
         else
             System.out.println("There is an error");
     }
-    
+
     public void overWrite(ArrayList<String> args) throws IOException {
         String command = args.get(0);
         String file = args.get(args.size() - 1);
@@ -520,9 +526,10 @@ public class Terminal {
         br.close();
         fr.close();
     }
-    public String help(){
+
+    public String help() {
         String helpText = new String(), line;
-        
+
         try {
             File file = new File("commandsDescription.txt");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -532,7 +539,7 @@ public class Terminal {
             }
             bufferedReader.close();
         } catch (Exception e) {
-            
+
             helpText = e.getMessage();
         }
 
