@@ -15,6 +15,7 @@ public class Parser {
             }
         }
     }
+
     private Terminal terminal = new Terminal();
 
     // array list to store args
@@ -25,8 +26,8 @@ public class Parser {
 
     // const array which stores the valid commands
     // I used it to check if the command of the input is valid or not
-    private final String[] commands = { "cd", "ls", "cp", "cat", "more", "mkdir", "rmdir", "mv", "rm", "args", "date",
-            "help", "pwd", "clear" };
+    private final String[] commands = {"cd", "ls", "cp", "cat", "more", "mkdir", "rmdir", "mv", "rm", "args", "date",
+            "help", "pwd", "clear", "exit"};
 
     public void print(String output) {
         System.out.println(output);
@@ -66,8 +67,8 @@ public class Parser {
         }
         boolean appendOperator = Arrays.asList(List).contains(">");
         boolean overWriteOperator = Arrays.asList(List).contains(">>");
-       
-        for (int i = 1; i < List.length; i++){
+
+        for (int i = 1; i < List.length; i++) {
             args.add(List[i]);
         }
 
@@ -77,62 +78,63 @@ public class Parser {
             args.add(0, cmd);
             terminal.redirectAppend(args);
             return true;
-        }else if(overWriteOperator){
+        } else if (overWriteOperator) {
             args.remove(args.indexOf(">>"));
             args.add(0, cmd);
             terminal.overWrite(args);
             return true;
-        }else if(pipe){
+        } else if (pipe) {
             terminal.pipe(args);
+            return true;
         }
 
         switch (cmd) {
             case "cd":
-            terminal.cd(args);
-            break;
+                terminal.cd(args);
+                break;
             case "ls":
-            print(terminal.ls(args));
-            break;
+                print(terminal.ls(args));
+                break;
             case "cp":
-            terminal.cp(args);
-            break;
+                terminal.cp(args);
+                break;
             case "cat":
-            print(terminal.cat(args));
-            break;
+                print(terminal.cat(args));
+                break;
             case "more":
-            print(terminal.more(args, false));
-            break;
+                print(terminal.more(args, false));
+                break;
             case "mkdir":
-            terminal.mkdir(args);
-            break;
+                terminal.mkdir(args);
+                break;
             case "rmdir":
-            terminal.rmdir(args);
-            break;
-            
+                terminal.rmdir(args);
+                break;
+
             case "mv":
-            terminal.mv(args);
-            break;
+                terminal.mv(args);
+                break;
             case "rm":
-            print(terminal.rm(args));
-            break;
+                print(terminal.rm(args));
+                break;
             case "args":
-            print(terminal.args(args));
-            break;
+                print(terminal.args(args));
+                break;
             case "date":
-            print(terminal.date(args));
-            break;
+                print(terminal.date(args));
+                break;
             case "help":
-            print(terminal.help());
-            break;
+                print(terminal.help());
+                break;
             case "pwd":
-            print(terminal.pwd());
-            break;
+                print(terminal.pwd());
+                break;
             case "clear":
-            terminal.clear();
-            break;
-        default:
-            return false;
-    }
+                terminal.clear();
+                break;
+            default:
+                System.exit(0);
+        }
 
         return true;
     }

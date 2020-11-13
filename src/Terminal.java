@@ -17,7 +17,7 @@ public class Terminal {
     Terminal() {
         currentDirectory = new File(System.getProperty("user.home"));
     }
-    
+
     public String pwd() {
         String s = "";
         s += currentDirectory.toString();
@@ -92,10 +92,10 @@ public class Terminal {
     }
 
     public void mkdir(ArrayList<String> args) {
-        if(args.size()>1){
+        if (args.size() > 1) {
             System.out.println("Too many argumnet");
             return;
-        }else if(args.size()<1){
+        } else if (args.size() < 1) {
             System.out.println("Few argument");
             return;
         }
@@ -378,7 +378,7 @@ public class Terminal {
                     else if (cmd.equals("mv"))
                         mv(paths);
                     else if (cmd.equals("help"))
-                        temp=help();
+                        temp = help();
                     cmd = args.get(i + 1);
                     paths.clear();
                 } else if (i + 1 == args.size()) {
@@ -409,9 +409,8 @@ public class Terminal {
                     else if (cmd.equals("more")) {
                         moreStr(temp);
                         return "";
-                    }
-                    else if (cmd.equals("help"))
-                        temp=help();
+                    } else if (cmd.equals("help"))
+                        temp = help();
                 } else if (args.get(i + 1).equals("|")) {
                     paths.add(args.get(0));
                     args.remove(i + 1);
@@ -442,7 +441,7 @@ public class Terminal {
                     else if (cmd.equals("mv"))
                         mv(paths);
                     else if (cmd.equals("help"))
-                        temp=help();
+                        temp = help();
                     cmd = args.get(i + 1);
                     paths.clear();
                 } else {
